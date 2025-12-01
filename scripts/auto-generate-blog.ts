@@ -551,7 +551,7 @@ ${topic.sourceInspiration ? `INSPIRATION: Trending on ${topic.sourceInspiration}
 {
   "title": "SEO title following pattern: [Primary Keyword] + [Modifier] + [Year/Number]",
   "description": "Meta description (150-160 chars) with: keyword, benefit, CTA",
-  "author": "Realistic expert name with credentials (e.g., 'Mike Rodriguez, 20-Year HVAC Technician')",
+  "author": "MyHomeQuoter Team",
   "readingTime": <calculated based on ~200 words/min>,
   "tags": ["primary keyword", "long-tail 1", "long-tail 2", "related topic"],
   "content": "<FULL MARKDOWN ARTICLE>"
