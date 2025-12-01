@@ -54,6 +54,9 @@ on:
     - cron: '0 14 * * *'  # 14:00 UTC
     - cron: '0 20 * * *'  # 20:00 UTC
 
+permissions:
+  contents: write
+
 jobs:
   generate-and-deploy:
     runs-on: ubuntu-latest
