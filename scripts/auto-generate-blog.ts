@@ -353,12 +353,40 @@ function convertResearchedTopic(topic: ResearchedTopic): TopicWithMeta {
   };
 }
 
+// Static high-quality images per category (Unsplash direct links)
+const CATEGORY_IMAGES: Record<string, string[]> = {
+  solar: [
+    'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&h=630&fit=crop',
+    'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?w=1200&h=630&fit=crop',
+    'https://images.unsplash.com/photo-1559302504-64aae6ca6b6d?w=1200&h=630&fit=crop',
+  ],
+  roofing: [
+    'https://images.unsplash.com/photo-1632759145351-1d592919f522?w=1200&h=630&fit=crop',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=630&fit=crop',
+    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=630&fit=crop',
+  ],
+  hvac: [
+    'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=1200&h=630&fit=crop',
+    'https://images.unsplash.com/photo-1631545806609-35d4a40e2a59?w=1200&h=630&fit=crop',
+    'https://images.unsplash.com/photo-1584568694244-14fbdf83bd30?w=1200&h=630&fit=crop',
+  ],
+  windows: [
+    'https://images.unsplash.com/photo-1604014237800-1c9102c219da?w=1200&h=630&fit=crop',
+  ],
+  plumbing: [
+    'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=1200&h=630&fit=crop',
+  ],
+  electrical: [
+    'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=1200&h=630&fit=crop',
+  ],
+};
+
 function generateImageConfig(category: string) {
-  const keywords = IMAGE_KEYWORDS[category] || ['home improvement'];
-  const keyword = keywords[Math.floor(Math.random() * keywords.length)];
+  const images = CATEGORY_IMAGES[category] || CATEGORY_IMAGES.solar;
+  const heroImage = images[Math.floor(Math.random() * images.length)];
   return {
-    heroImage: `https://source.unsplash.com/1200x630/?${encodeURIComponent(keyword)}`,
-    thumbnailImage: `https://source.unsplash.com/400x300/?${encodeURIComponent(keyword)}`,
+    heroImage,
+    thumbnailImage: heroImage.replace('w=1200&h=630', 'w=400&h=300'),
   };
 }
 
@@ -551,7 +579,7 @@ ${topic.sourceInspiration ? `INSPIRATION: Trending on ${topic.sourceInspiration}
 {
   "title": "SEO title following pattern: [Primary Keyword] + [Modifier] + [Year/Number]",
   "description": "Meta description (150-160 chars) with: keyword, benefit, CTA",
-  "author": "MyHomeQuoter Team",
+  "author": "Clément, Rédacteur MyHomeQuoter",
   "readingTime": <calculated based on ~200 words/min>,
   "tags": ["primary keyword", "long-tail 1", "long-tail 2", "related topic"],
   "content": "<FULL MARKDOWN ARTICLE>"

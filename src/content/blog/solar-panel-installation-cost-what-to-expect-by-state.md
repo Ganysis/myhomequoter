@@ -2,11 +2,11 @@
 title: "Solar Panel Installation Cost by State 2024: Complete Breakdown + Hidden Fees"
 description: "Solar panel installation costs vary $15,000-$35,000 by state. Get exact pricing, incentives, and savings for your area. Free quotes available."
 publishDate: 2025-12-01
-author: "Marcus Chen, Solar Energy Systems Engineer & NABCEP Certified Professional"
+author: "Clément, Rédacteur MyHomeQuoter"
 category: solar
 tags: ["solar panel installation cost","solar costs by state","solar panel pricing 2024","residential solar systems"]
 image:
-  src: "https://source.unsplash.com/1200x630/?solar%20technician"
+  src: "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&h=630&fit=crop"
   alt: "Solar Panel Installation Cost by State 2024: Complete Breakdown + Hidden Fees"
 featured: true
 readingTime: 14
