@@ -147,6 +147,8 @@ jobs:
           🤖 Generated with Claude AI
           Co-Authored-By: Claude <noreply@anthropic.com>"
 
+          # Pull latest changes to avoid conflicts with concurrent pushes
+          git pull --rebase origin ${{ github.ref_name }}
           git push
 
       - name: Deploy to Cloudflare
