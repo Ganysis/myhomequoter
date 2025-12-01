@@ -15,10 +15,19 @@ pnpm-debug.log*
 
 # environment variables
 .env
+.env.local
 .env.production
+*.local
+
+# logs
+logs/
 
 # macOS-specific files
 .DS_Store
 
 # jetbrains setting folder
 .idea/
+
+# Windows reserved filenames
+nul
+NUL

@@ -1,0 +1,225 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { niches } from '../../../lib/niches';
+
+// Category definitions
+const categoryNames: Record<string, string> = {
+  'solar': 'Solar Energy',
+  'roofing': 'Roofing',
+  'hvac': 'HVAC',
+  'windows': 'Windows & Doors',
+  'plumbing': 'Plumbing',
+  'electrical': 'Electrical',
+  'home-improvement': 'Home Improvement',
+  'guides': 'Guides',
+  'tips': 'Tips & Advice',
+};
+
+const categoryDescriptions: Record<string, string> = {
+  'solar': 'Expert guides on solar panel installation, costs, incentives, and how to maximize your solar investment.',
+  'roofing': 'Everything you need to know about roof repair, replacement, materials, and finding the right contractor.',
+  'hvac': 'Heating and cooling tips, maintenance guides, and advice on HVAC system upgrades and efficiency.',
+  'windows': 'Window and door replacement guides, energy efficiency tips, and cost breakdowns.',
+  'plumbing': 'Plumbing repair guides, maintenance tips, and advice on when to call a professional.',
+  'electrical': 'Electrical safety tips, upgrade guides, and information on working with licensed electricians.',
+  'home-improvement': 'General home improvement tips, project ideas, and guides for homeowners.',
+  'guides': 'In-depth guides and how-to articles for major home projects.',
+  'tips': 'Quick tips and practical advice for maintaining and improving your home.',
+};
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const categories = [...new Set(posts.map(post => post.data.category))];
+
+  return categories.map((category) => ({
+    params: { category },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+
+// Get posts for this category
+const allPosts = await getCollection('blog', ({ data }) => !data.draft && data.category === category);
+const sortedPosts = allPosts.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+
+// Get all categories for navigation
+const allBlogPosts = await getCollection('blog', ({ data }) => !data.draft);
+const categories = [...new Set(allBlogPosts.map(post => post.data.category))];
+
+// Get niche info
+const relatedNiche = niches.find(n => n.slug === category);
+
+// Format date
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+// Get category color
+const getCategoryColor = (cat: string) => {
+  const niche = niches.find(n => n.slug === cat);
+  return niche?.color || '#6366f1';
+};
+
+// Category-specific fallback images
+const categoryImages: Record<string, string> = {
+  'solar': 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&h=400&fit=crop',
+  'roofing': 'https://images.unsplash.com/photo-1632759145351-1d592919f522?w=600&h=400&fit=crop',
+  'hvac': 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&h=400&fit=crop',
+  'windows': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop',
+  'plumbing': 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=600&h=400&fit=crop',
+  'electrical': 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=600&h=400&fit=crop',
+};
+
+const getThumbnail = (post: typeof sortedPosts[0]) => {
+  return post.data.image?.src || categoryImages[post.data.category] || categoryImages['solar'];
+};
+
+const categoryName = categoryNames[category] || category;
+const categoryDescription = categoryDescriptions[category] || `Articles about ${categoryName.toLowerCase()} for homeowners.`;
+---
+
+<BaseLayout
+  title={`${categoryName} Articles | MyHomeQuoter Blog`}
+  description={categoryDescription}
+>
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="mb-4">
+        <ol class="flex items-center space-x-2 text-sm text-gray-400">
+          <li><a href="/" class="hover:text-white">Home</a></li>
+          <li>/</li>
+          <li><a href="/blog/" class="hover:text-white">Blog</a></li>
+          <li>/</li>
+          <li class="text-white">{categoryName}</li>
+        </ol>
+      </nav>
+      <div class="flex items-center gap-4 mb-4">
+        <span
+          class="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+          style={`background-color: ${getCategoryColor(category)};`}
+        >
+          {relatedNiche?.icon || '📰'}
+        </span>
+        <h1 class="text-3xl md:text-4xl font-bold">
+          {categoryName}
+        </h1>
+      </div>
+      <p class="text-lg text-gray-300 max-w-2xl">
+        {categoryDescription}
+      </p>
+    </div>
+  </section>
+
+  <!-- Category Filter -->
+  <section class="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center space-x-4 py-4 overflow-x-auto">
+        <a
+          href="/blog/"
+          class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors whitespace-nowrap"
+        >
+          All Posts
+        </a>
+        {categories.map((cat) => (
+          <a
+            href={`/blog/category/${cat}/`}
+            class={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+              cat === category
+                ? 'bg-gray-900 text-white'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            {categoryNames[cat] || cat}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Posts -->
+  <section class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-xl font-semibold text-gray-900">
+          {sortedPosts.length} {sortedPosts.length === 1 ? 'Article' : 'Articles'}
+        </h2>
+      </div>
+
+      {sortedPosts.length > 0 ? (
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {sortedPosts.map((post) => (
+            <article class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+              <a href={`/blog/${post.slug}/`} class="block">
+                <div class="h-40 overflow-hidden">
+                  <img
+                    src={getThumbnail(post)}
+                    alt={post.data.title}
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="p-5">
+                  <div class="flex items-center space-x-2 mb-2">
+                    <span
+                      class="px-2 py-0.5 rounded text-xs font-medium text-white"
+                      style={`background-color: ${getCategoryColor(post.data.category)};`}
+                    >
+                      {categoryNames[post.data.category] || post.data.category}
+                    </span>
+                    {post.data.readingTime && (
+                      <span class="text-xs text-gray-500">{post.data.readingTime} min</span>
+                    )}
+                  </div>
+                  <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-primary-600">
+                    {post.data.title}
+                  </h3>
+                  <p class="text-sm text-gray-600 line-clamp-2 mb-3">
+                    {post.data.description}
+                  </p>
+                  <div class="flex items-center justify-between text-xs text-gray-500">
+                    <span>{post.data.author.split(',')[0]}</span>
+                    <span>{formatDate(post.data.publishDate)}</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <p class="text-gray-500">No articles in this category yet.</p>
+          <a href="/blog/" class="text-primary-600 hover:underline mt-2 inline-block">
+            View all articles
+          </a>
+        </div>
+      )}
+    </div>
+  </section>
+
+  <!-- CTA -->
+  {relatedNiche && (
+    <section class="py-12 bg-primary-600">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-2xl font-bold text-white mb-4">
+          Need {relatedNiche.name} Services?
+        </h2>
+        <p class="text-primary-100 mb-6">
+          Get free quotes from licensed contractors in your area
+        </p>
+        <a
+          href={`/get-quotes/${relatedNiche.slug}/`}
+          class="inline-flex items-center px-6 py-3 bg-white text-gray-900 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+        >
+          Get Free {relatedNiche.name} Quotes
+        </a>
+      </div>
+    </section>
+  )}
+</BaseLayout>

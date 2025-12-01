@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import MultiStepForm from '../components/LeadForm/MultiStepForm';
+
+// Get URL params for pre-filling
+const url = new URL(Astro.request.url);
+const service = url.searchParams.get('service') || '';
+const zip = url.searchParams.get('zip') || '';
+---
+
+<BaseLayout
+  title="Get Free Home Improvement Quotes"
+  description="Get up to 4 free quotes from pre-screened local contractors. Compare prices and choose the best professional for your project."
+>
+  <section class="py-12 lg:py-16 bg-gray-50 min-h-screen">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-8">
+        <h1 class="text-3xl lg:text-4xl font-bold text-gray-900">
+          Get Your Free Quotes
+        </h1>
+        <p class="mt-2 text-lg text-gray-600">
+          Answer a few questions to get matched with top-rated contractors in your area
+        </p>
+      </div>
+
+      <MultiStepForm client:load initialService={service} initialZip={zip} />
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,240 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { niches } from '../../lib/niches';
+
+// Get all blog posts, sorted by date
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const sortedPosts = allPosts.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+
+// Get featured posts
+const featuredPosts = sortedPosts.filter(post => post.data.featured).slice(0, 3);
+const recentPosts = sortedPosts.slice(0, 6);
+
+// Get unique categories
+const categories = [...new Set(sortedPosts.map(post => post.data.category))];
+
+// Category display names
+const categoryNames: Record<string, string> = {
+  'solar': 'Solar Energy',
+  'roofing': 'Roofing',
+  'hvac': 'HVAC',
+  'windows': 'Windows & Doors',
+  'plumbing': 'Plumbing',
+  'electrical': 'Electrical',
+  'home-improvement': 'Home Improvement',
+  'guides': 'Guides',
+  'tips': 'Tips & Advice',
+};
+
+// Category colors from niches
+const getCategoryColor = (category: string) => {
+  const niche = niches.find(n => n.slug === category);
+  return niche?.color || '#6366f1';
+};
+
+// Format date
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
+// Get post thumbnail
+const getPostThumbnail = (post: typeof sortedPosts[0]) => {
+  if (post.data.image?.src) {
+    return post.data.image.src;
+  }
+  // Fallback to Unsplash based on category
+  return `https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop&q=80&auto=format`;
+};
+
+// Category-specific fallback images
+const categoryImages: Record<string, string> = {
+  'solar': 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&h=400&fit=crop',
+  'roofing': 'https://images.unsplash.com/photo-1632759145351-1d592919f522?w=600&h=400&fit=crop',
+  'hvac': 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=600&h=400&fit=crop',
+  'windows': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop',
+  'plumbing': 'https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=600&h=400&fit=crop',
+  'electrical': 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=600&h=400&fit=crop',
+};
+
+const getThumbnail = (post: typeof sortedPosts[0]) => {
+  return post.data.image?.src || categoryImages[post.data.category] || categoryImages['solar'];
+};
+---
+
+<BaseLayout
+  title="Home Improvement Blog | Expert Tips & Guides | MyHomeQuoter"
+  description="Expert advice on solar panels, roofing, HVAC, and home improvement. Cost guides, maintenance tips, and how to find the best contractors."
+>
+  <!-- Hero -->
+  <section class="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          Home Improvement Blog
+        </h1>
+        <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+          Expert guides, cost breakdowns, and tips to help you make informed decisions about your home projects.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Category Filter -->
+  <section class="bg-white border-b border-gray-200 sticky top-0 z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center space-x-4 py-4 overflow-x-auto">
+        <a
+          href="/blog/"
+          class="px-4 py-2 rounded-full text-sm font-medium bg-gray-900 text-white whitespace-nowrap"
+        >
+          All Posts
+        </a>
+        {categories.map((category) => (
+          <a
+            href={`/blog/category/${category}/`}
+            class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors whitespace-nowrap"
+          >
+            {categoryNames[category] || category}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Posts -->
+  {featuredPosts.length > 0 && (
+    <section class="py-12 bg-gray-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">Featured Articles</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          {featuredPosts.map((post, index) => (
+            <article class={`bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-shadow ${index === 0 ? 'md:col-span-2 md:row-span-2' : ''}`}>
+              <a href={`/blog/${post.slug}/`} class="block">
+                <div class={`${index === 0 ? 'h-64 md:h-80' : 'h-40'} overflow-hidden`}>
+                  <img
+                    src={getThumbnail(post)}
+                    alt={post.data.title}
+                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="p-6">
+                  <div class="flex items-center space-x-2 mb-3">
+                    <span
+                      class="px-2 py-1 rounded text-xs font-medium text-white"
+                      style={`background-color: ${getCategoryColor(post.data.category)};`}
+                    >
+                      {categoryNames[post.data.category] || post.data.category}
+                    </span>
+                    <span class="text-sm text-gray-500">{post.data.readingTime} min read</span>
+                  </div>
+                  <h3 class={`font-bold text-gray-900 mb-2 hover:text-primary-600 ${index === 0 ? 'text-2xl' : 'text-lg'}`}>
+                    {post.data.title}
+                  </h3>
+                  <p class={`text-gray-600 mb-4 ${index === 0 ? '' : 'line-clamp-2'}`}>
+                    {post.data.description}
+                  </p>
+                  <div class="flex items-center justify-between text-sm text-gray-500">
+                    <span>{post.data.author}</span>
+                    <span>{formatDate(post.data.publishDate)}</span>
+                  </div>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- All Posts -->
+  <section class="py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-bold text-gray-900">Latest Articles</h2>
+        <span class="text-gray-500">{sortedPosts.length} articles</span>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {sortedPosts.map((post) => (
+          <article class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+            <a href={`/blog/${post.slug}/`} class="block">
+              <div class="h-40 overflow-hidden">
+                <img
+                  src={getThumbnail(post)}
+                  alt={post.data.title}
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+              </div>
+              <div class="p-5">
+                <div class="flex items-center space-x-2 mb-2">
+                  <span
+                    class="px-2 py-0.5 rounded text-xs font-medium text-white"
+                    style={`background-color: ${getCategoryColor(post.data.category)};`}
+                  >
+                    {categoryNames[post.data.category] || post.data.category}
+                  </span>
+                  {post.data.readingTime && (
+                    <span class="text-xs text-gray-500">{post.data.readingTime} min</span>
+                  )}
+                </div>
+                <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2 hover:text-primary-600">
+                  {post.data.title}
+                </h3>
+                <p class="text-sm text-gray-600 line-clamp-2 mb-3">
+                  {post.data.description}
+                </p>
+                <div class="flex items-center justify-between text-xs text-gray-500">
+                  <span>{post.data.author.split(',')[0]}</span>
+                  <span>{formatDate(post.data.publishDate)}</span>
+                </div>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-16 bg-primary-600">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold text-white mb-4">
+        Ready to Start Your Project?
+      </h2>
+      <p class="text-xl text-primary-100 mb-8">
+        Get free quotes from licensed contractors in your area
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        {niches.slice(0, 4).map((niche) => (
+          <a
+            href={`/get-quotes/${niche.slug}/`}
+            class="px-6 py-3 bg-white text-gray-900 font-medium rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            {niche.name} Quotes
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Schema Markup -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "MyHomeQuoter Blog",
+    "description": "Expert guides on solar, roofing, HVAC, and home improvement",
+    "url": "https://myhomequoter.com/blog/",
+    "publisher": {
+      "@type": "Organization",
+      "name": "MyHomeQuoter",
+      "url": "https://myhomequoter.com"
+    }
+  })} />
+</BaseLayout>

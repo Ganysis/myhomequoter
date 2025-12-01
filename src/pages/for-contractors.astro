@@ -1,0 +1,272 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { niches } from '../lib/niches';
+
+const benefits = [
+  {
+    icon: 'users',
+    title: 'Pre-Qualified Leads',
+    description: 'Every lead is a homeowner actively looking for your services. No tire-kickers.',
+  },
+  {
+    icon: 'dollar',
+    title: 'Pay Only for Leads You Want',
+    description: 'No monthly fees. Only pay when you claim a lead that matches your criteria.',
+  },
+  {
+    icon: 'map',
+    title: 'Choose Your Service Area',
+    description: 'Set your coverage zones and only receive leads from your target areas.',
+  },
+  {
+    icon: 'filter',
+    title: 'Filter by Niche',
+    description: 'Focus on the services you offer best. Solar, roofing, HVAC, and more.',
+  },
+  {
+    icon: 'clock',
+    title: 'Real-Time Notifications',
+    description: 'Get instant alerts when new leads match your preferences.',
+  },
+  {
+    icon: 'chart',
+    title: 'Track Your ROI',
+    description: 'Dashboard analytics to measure your lead-to-customer conversion.',
+  },
+];
+
+const pricing = [
+  { niche: 'Solar Panels', price: '$50-150' },
+  { niche: 'Roofing', price: '$40-100' },
+  { niche: 'HVAC', price: '$30-80' },
+  { niche: 'Windows & Doors', price: '$30-70' },
+  { niche: 'Plumbing', price: '$25-60' },
+  { niche: 'Electrical', price: '$30-70' },
+];
+
+const faqs = [
+  {
+    question: 'How does the lead pricing work?',
+    answer: 'You only pay when you claim a lead. Prices vary by service type and location, ranging from $25-150 per lead. You see the price before claiming and only pay for leads you want.',
+  },
+  {
+    question: 'How quickly will I receive leads?',
+    answer: 'Leads are delivered in real-time. As soon as a homeowner in your service area submits a request, you\'ll receive a notification and can claim the lead immediately.',
+  },
+  {
+    question: 'Can I set a daily budget or lead limit?',
+    answer: 'Yes! You can set maximum leads per day, weekly budgets, and pause lead delivery anytime. You\'re always in control.',
+  },
+  {
+    question: 'What information do I get with each lead?',
+    answer: 'Each lead includes: name, phone, email, address, project type, timeline, budget range, property type, and any additional details the homeowner provided.',
+  },
+  {
+    question: 'How is billing handled?',
+    answer: 'We bill monthly for all leads claimed during that period. You\'ll receive a detailed invoice and can pay via credit card or ACH.',
+  },
+  {
+    question: 'What if a lead has invalid contact information?',
+    answer: 'Contact us within 48 hours if you receive a lead with incorrect or disconnected contact info. We\'ll review and credit your account if the lead was invalid.',
+  },
+];
+---
+
+<BaseLayout
+  title="For Contractors | Get Quality Leads"
+  description="Join MyHomeQuoter and receive pre-qualified leads for solar, roofing, HVAC, and more. Pay only for leads you claim. No monthly fees."
+>
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-br from-gray-900 to-gray-800 text-white overflow-hidden">
+    <div class="absolute inset-0 bg-primary-600 opacity-10"></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+      <div class="max-w-3xl">
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+          Grow Your Business with
+          <span class="text-primary-400">Quality Leads</span>
+        </h1>
+        <p class="mt-6 text-xl text-gray-300">
+          Join thousands of contractors receiving pre-qualified leads from homeowners actively looking for their services. No monthly fees — only pay for leads you claim.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            href="/portal/"
+            class="inline-flex items-center px-8 py-4 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            Join Now — It's Free
+            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+          <a
+            href="#pricing"
+            class="inline-flex items-center px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+          >
+            View Pricing
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900">
+          Why Contractors Choose MyHomeQuoter
+        </h2>
+        <p class="mt-4 text-xl text-gray-600">
+          Everything you need to grow your home services business
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {benefits.map((benefit) => (
+          <div class="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+            <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
+              <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 mb-2">{benefit.title}</h3>
+            <p class="text-gray-600">{benefit.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900">
+          How It Works
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+            1
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Create Account</h3>
+          <p class="text-gray-600">Sign up for free in under 2 minutes. No credit card required.</p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+            2
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Set Preferences</h3>
+          <p class="text-gray-600">Choose your service areas, niches, and daily lead limits.</p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+            3
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Receive Leads</h3>
+          <p class="text-gray-600">Get real-time notifications when matching leads come in.</p>
+        </div>
+
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
+            4
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Claim & Close</h3>
+          <p class="text-gray-600">Claim leads you want and convert them into customers.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section id="pricing" class="py-20">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900">
+          Transparent Pricing
+        </h2>
+        <p class="mt-4 text-xl text-gray-600">
+          No monthly fees. No contracts. Pay only for leads you claim.
+        </p>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <div class="grid grid-cols-2 gap-px bg-gray-200">
+          <div class="bg-gray-50 px-6 py-4 font-semibold text-gray-900">Service Type</div>
+          <div class="bg-gray-50 px-6 py-4 font-semibold text-gray-900 text-right">Price per Lead</div>
+          {pricing.map((item) => (
+            <>
+              <div class="bg-white px-6 py-4 text-gray-700">{item.niche}</div>
+              <div class="bg-white px-6 py-4 text-right font-semibold text-gray-900">{item.price}</div>
+            </>
+          ))}
+        </div>
+      </div>
+
+      <p class="mt-6 text-center text-gray-500 text-sm">
+        Prices vary by location. Higher-value markets may have higher lead prices.
+      </p>
+
+      <div class="mt-12 text-center">
+        <a
+          href="/portal/"
+          class="inline-flex items-center px-8 py-4 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition-colors"
+        >
+          Get Started Now
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-20 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900">
+          Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-4">
+        {faqs.map((faq) => (
+          <details class="group bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50">
+              <span class="font-medium text-gray-900 pr-4">{faq.question}</span>
+              <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="p-4 pt-0 text-gray-600">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="bg-primary-600 py-16">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl lg:text-4xl font-bold text-white">
+        Ready to Grow Your Business?
+      </h2>
+      <p class="mt-4 text-xl text-primary-100">
+        Join thousands of contractors already receiving quality leads
+      </p>
+      <a
+        href="/portal/"
+        class="mt-8 inline-flex items-center px-8 py-4 bg-white text-primary-700 font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+      >
+        Create Free Account
+        <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

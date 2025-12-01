@@ -1,0 +1,294 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { niches, getNicheBySlug, getAllNicheSlugs } from '../../lib/niches';
+
+export function getStaticPaths() {
+  return getAllNicheSlugs().map((slug) => ({
+    params: { niche: slug },
+  }));
+}
+
+const { niche: nicheSlug } = Astro.params;
+const niche = getNicheBySlug(nicheSlug);
+
+if (!niche) {
+  return Astro.redirect('/404');
+}
+
+// Related niches (excluding current)
+const relatedNiches = niches.filter((n) => n.slug !== nicheSlug).slice(0, 4);
+
+// FAQ data (would be dynamic in production)
+const faqs = [
+  {
+    question: `How much does ${niche.name.toLowerCase()} cost?`,
+    answer: `The cost of ${niche.name.toLowerCase()} varies based on your location, project scope, and specific requirements. Get free quotes from local contractors to compare prices and find the best deal.`,
+  },
+  {
+    question: `How do I find a reliable ${niche.name.toLowerCase()} contractor?`,
+    answer: `We pre-screen all contractors for licensing, insurance, and customer reviews. Simply submit your project details and we'll match you with up to 4 trusted professionals in your area.`,
+  },
+  {
+    question: `Is the quote request really free?`,
+    answer: `Yes, requesting quotes is 100% free with no obligation. You'll receive competitive quotes from multiple contractors so you can make an informed decision.`,
+  },
+  {
+    question: `How quickly will contractors contact me?`,
+    answer: `Most contractors respond within 24 hours. For urgent projects, many will reach out the same day you submit your request.`,
+  },
+];
+---
+
+<BaseLayout
+  title={`${niche.name} Services | Get Free Quotes`}
+  description={niche.description}
+>
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-br from-gray-900 to-gray-800 text-white overflow-hidden">
+    <div class="absolute inset-0 opacity-20" style={`background-color: ${niche.color};`}></div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+      <div class="max-w-3xl">
+        <div class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-white/10 backdrop-blur mb-4">
+          <span class="w-2 h-2 rounded-full mr-2" style={`background-color: ${niche.color};`}></span>
+          {niche.name}
+        </div>
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
+          {niche.name} Services
+          <span class="block text-2xl sm:text-3xl font-normal text-gray-300 mt-2">
+            Find Top-Rated Contractors Near You
+          </span>
+        </h1>
+        <p class="mt-6 text-xl text-gray-300 max-w-2xl">
+          {niche.description}
+        </p>
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            href={`/get-quotes/?service=${niche.slug}`}
+            class="inline-flex items-center px-6 py-3 font-semibold rounded-lg transition-colors"
+            style={`background-color: ${niche.color}; color: white;`}
+          >
+            Get Free {niche.name} Quotes
+            <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+          <a
+            href="#how-it-works"
+            class="inline-flex items-center px-6 py-3 border-2 border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+          >
+            Learn More
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="py-16 lg:py-24">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900">
+          Why Choose MyHomeQuoter for {niche.name}?
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center p-6">
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={`background-color: ${niche.color}20;`}>
+            <svg class="w-8 h-8" style={`color: ${niche.color};`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Verified Contractors</h3>
+          <p class="text-gray-600">
+            Every {niche.name.toLowerCase()} contractor is licensed, insured, and background-checked for your peace of mind.
+          </p>
+        </div>
+
+        <div class="text-center p-6">
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={`background-color: ${niche.color}20;`}>
+            <svg class="w-8 h-8" style={`color: ${niche.color};`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Compare Prices</h3>
+          <p class="text-gray-600">
+            Receive up to 4 competitive quotes from local {niche.name.toLowerCase()} pros. No obligation to hire.
+          </p>
+        </div>
+
+        <div class="text-center p-6">
+          <div class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={`background-color: ${niche.color}20;`}>
+            <svg class="w-8 h-8" style={`color: ${niche.color};`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Fast Response</h3>
+          <p class="text-gray-600">
+            Get quotes within hours, not days. Most {niche.name.toLowerCase()} contractors respond same-day.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="py-16 lg:py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900">
+          How to Get {niche.name} Quotes
+        </h2>
+        <p class="mt-4 text-xl text-gray-600">
+          It only takes 2 minutes to get started
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white rounded-xl p-6 shadow-sm">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold text-white mb-4" style={`background-color: ${niche.color};`}>
+            1
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Describe Your Project</h3>
+          <p class="text-gray-600">
+            Tell us about your {niche.name.toLowerCase()} needs, timeline, and location.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-sm">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold text-white mb-4" style={`background-color: ${niche.color};`}>
+            2
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Get Matched</h3>
+          <p class="text-gray-600">
+            We'll instantly connect you with verified {niche.name.toLowerCase()} contractors in your area.
+          </p>
+        </div>
+
+        <div class="bg-white rounded-xl p-6 shadow-sm">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl font-bold text-white mb-4" style={`background-color: ${niche.color};`}>
+            3
+          </div>
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">Compare & Choose</h3>
+          <p class="text-gray-600">
+            Review quotes, check reviews, and hire the best contractor for your project.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-12 text-center">
+        <a
+          href={`/get-quotes/?service=${niche.slug}`}
+          class="inline-flex items-center px-8 py-4 font-semibold rounded-lg text-white transition-colors"
+          style={`background-color: ${niche.color};`}
+        >
+          Get Free {niche.name} Quotes
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-16 lg:py-24">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900">
+          Frequently Asked Questions
+        </h2>
+      </div>
+
+      <div class="space-y-4">
+        {faqs.map((faq, index) => (
+          <details class="group bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50">
+              <span class="font-medium text-gray-900">{faq.question}</span>
+              <svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </summary>
+            <div class="p-4 pt-0 text-gray-600">
+              {faq.answer}
+            </div>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Services -->
+  <section class="py-16 lg:py-24 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900">
+          Related Home Services
+        </h2>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {relatedNiches.map((related) => (
+          <a
+            href={`/${related.slug}/`}
+            class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow"
+          >
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={`background-color: ${related.color}20;`}>
+              <div class="w-5 h-5 rounded" style={`background-color: ${related.color};`}></div>
+            </div>
+            <h3 class="font-semibold text-gray-900">{related.name}</h3>
+            <p class="mt-1 text-sm text-gray-500 line-clamp-2">{related.description}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-16" style={`background-color: ${niche.color};`}>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl lg:text-4xl font-bold text-white">
+        Ready to Start Your {niche.name} Project?
+      </h2>
+      <p class="mt-4 text-xl text-white/90">
+        Get free quotes from trusted contractors today
+      </p>
+      <a
+        href={`/get-quotes/?service=${niche.slug}`}
+        class="mt-8 inline-flex items-center px-8 py-4 bg-white font-semibold rounded-lg hover:bg-gray-100 transition-colors"
+        style={`color: ${niche.color};`}
+      >
+        Get Free Quotes Now
+        <svg class="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+        </svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- Schema Markup -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": `${niche.name} Services`,
+    "description": niche.description,
+    "provider": {
+      "@type": "Organization",
+      "name": "MyHomeQuoter"
+    },
+    "areaServed": {
+      "@type": "Country",
+      "name": "United States"
+    }
+  })} />
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  })} />
+</BaseLayout>

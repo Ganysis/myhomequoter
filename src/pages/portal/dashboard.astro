@@ -1,0 +1,187 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { niches } from '../../lib/niches';
+
+// This page would check auth and redirect if not logged in
+// For now, showing the dashboard structure
+
+const mockStats = {
+  leadsThisMonth: 47,
+  totalSpent: 2350,
+  availableNow: 12,
+  claimRate: 78,
+};
+
+const mockLeads = [
+  { id: '1', niche: 'Solar', city: 'Houston', state: 'TX', propertyType: 'Residential', timeline: 'ASAP', price: 75 },
+  { id: '2', niche: 'Roofing', city: 'Austin', state: 'TX', propertyType: 'Residential', timeline: '1-3 months', price: 65 },
+  { id: '3', niche: 'HVAC', city: 'Dallas', state: 'TX', propertyType: 'Commercial', timeline: 'ASAP', price: 55 },
+  { id: '4', niche: 'Solar', city: 'San Antonio', state: 'TX', propertyType: 'Residential', timeline: 'Planning', price: 75 },
+];
+---
+
+<BaseLayout
+  title="Dashboard | Contractor Portal"
+  description="View and claim available leads"
+  noindex={true}
+>
+  <div class="min-h-screen bg-gray-100">
+    <!-- Top Nav -->
+    <header class="bg-white shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <div class="flex items-center space-x-4">
+            <a href="/" class="flex items-center space-x-2">
+              <div class="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+              </div>
+              <span class="text-lg font-bold text-gray-900">MyHomeQuoter</span>
+            </a>
+            <span class="text-gray-300">|</span>
+            <span class="text-gray-600">Contractor Portal</span>
+          </div>
+
+          <nav class="flex items-center space-x-6">
+            <a href="/portal/dashboard/" class="text-primary-600 font-medium">Dashboard</a>
+            <a href="/portal/leads/" class="text-gray-600 hover:text-gray-900">My Leads</a>
+            <a href="/portal/billing/" class="text-gray-600 hover:text-gray-900">Billing</a>
+            <a href="/portal/settings/" class="text-gray-600 hover:text-gray-900">Settings</a>
+            <button class="text-gray-600 hover:text-gray-900">Sign Out</button>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Welcome -->
+      <div class="mb-8">
+        <h1 class="text-2xl font-bold text-gray-900">Welcome back, John!</h1>
+        <p class="text-gray-600">Here's what's happening with your leads</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="text-sm text-gray-500 mb-1">Leads This Month</div>
+          <div class="text-3xl font-bold text-gray-900">{mockStats.leadsThisMonth}</div>
+          <div class="text-sm text-green-600 mt-1">+12% from last month</div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="text-sm text-gray-500 mb-1">Total Spent</div>
+          <div class="text-3xl font-bold text-gray-900">${mockStats.totalSpent.toLocaleString()}</div>
+          <div class="text-sm text-gray-500 mt-1">This billing cycle</div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="text-sm text-gray-500 mb-1">Available Now</div>
+          <div class="text-3xl font-bold text-primary-600">{mockStats.availableNow}</div>
+          <div class="text-sm text-gray-500 mt-1">Leads in your area</div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="text-sm text-gray-500 mb-1">Claim Rate</div>
+          <div class="text-3xl font-bold text-gray-900">{mockStats.claimRate}%</div>
+          <div class="text-sm text-gray-500 mt-1">Your claim success rate</div>
+        </div>
+      </div>
+
+      <!-- Available Leads -->
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900">Available Leads</h2>
+            <p class="text-sm text-gray-500">Leads matching your preferences</p>
+          </div>
+          <div class="flex items-center space-x-3">
+            <select class="px-3 py-2 border border-gray-300 rounded-lg text-sm">
+              <option>All Niches</option>
+              {niches.map((n) => (
+                <option value={n.slug}>{n.name}</option>
+              ))}
+            </select>
+            <button class="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700">
+              Refresh
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Property</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timeline</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+              {mockLeads.map((lead) => (
+                <tr class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="font-medium text-gray-900">{lead.niche}</span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-gray-600">
+                    {lead.city}, {lead.state}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-gray-600">
+                    {lead.propertyType}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <span class={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                      lead.timeline === 'ASAP'
+                        ? 'bg-red-100 text-red-700'
+                        : lead.timeline === 'Planning'
+                          ? 'bg-gray-100 text-gray-700'
+                          : 'bg-yellow-100 text-yellow-700'
+                    }`}>
+                      {lead.timeline}
+                    </span>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap font-semibold text-gray-900">
+                    ${lead.price}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-right">
+                    <button class="px-4 py-2 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700">
+                      Claim Lead
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="px-6 py-4 border-t border-gray-200 flex justify-between items-center">
+          <p class="text-sm text-gray-500">Showing {mockLeads.length} of {mockStats.availableNow} available leads</p>
+          <a href="/portal/leads/" class="text-sm text-primary-600 font-medium hover:underline">
+            View all leads →
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="mt-8 grid md:grid-cols-3 gap-6">
+        <a href="/portal/settings/" class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+          <h3 class="font-semibold text-gray-900 mb-2">Update Preferences</h3>
+          <p class="text-sm text-gray-600">Change your service areas, niches, and daily limits</p>
+        </a>
+
+        <a href="/portal/billing/" class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+          <h3 class="font-semibold text-gray-900 mb-2">View Billing</h3>
+          <p class="text-sm text-gray-600">See invoices, update payment method, download receipts</p>
+        </a>
+
+        <a href="/contact/" class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow">
+          <h3 class="font-semibold text-gray-900 mb-2">Get Support</h3>
+          <p class="text-sm text-gray-600">Contact our team for help with your account</p>
+        </a>
+      </div>
+    </main>
+  </div>
+</BaseLayout>

@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NicheLeadForm from '../../components/LeadForm/NicheLeadForm';
+import { niches, getNicheBySlug, getAllNicheSlugs } from '../../lib/niches';
+import { hasCustomForm } from '../../lib/niche-forms';
+
+export function getStaticPaths() {
+  return getAllNicheSlugs().map((slug) => ({
+    params: { niche: slug },
+  }));
+}
+
+const { niche: nicheSlug } = Astro.params;
+const niche = getNicheBySlug(nicheSlug);
+
+if (!niche) {
+  return Astro.redirect('/get-quotes/');
+}
+
+// Get URL params
+const url = new URL(Astro.request.url);
+const zip = url.searchParams.get('zip') || '';
+
+const hasForm = hasCustomForm(nicheSlug);
+
+// Benefits specific to this niche
+const benefits = [
+  {
+    icon: 'shield',
+    title: 'Verified Contractors',
+    description: `All ${niche.name.toLowerCase()} contractors are licensed, insured, and background-checked`,
+  },
+  {
+    icon: 'clock',
+    title: 'Quick Response',
+    description: 'Get quotes from local pros within hours, not days',
+  },
+  {
+    icon: 'dollar',
+    title: 'Compare & Save',
+    description: 'Up to 4 competitive quotes to ensure you get the best price',
+  },
+];
+---
+
+<BaseLayout
+  title={`Get Free ${niche.name} Quotes | MyHomeQuoter`}
+  description={`Get up to 4 free ${niche.name.toLowerCase()} quotes from pre-screened local contractors. Compare prices and save.`}
+>
+  <div class="min-h-screen bg-gray-50">
+    <!-- Hero -->
+    <section class="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-12">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center space-x-2 text-gray-400 text-sm mb-4">
+          <a href="/" class="hover:text-white">Home</a>
+          <span>/</span>
+          <a href={`/${niche.slug}/`} class="hover:text-white">{niche.name}</a>
+          <span>/</span>
+          <span class="text-white">Get Quotes</span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold">
+          Get Free {niche.name} Quotes
+        </h1>
+        <p class="mt-2 text-lg text-gray-300">
+          Answer a few questions to get matched with top-rated {niche.name.toLowerCase()} contractors in your area
+        </p>
+      </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="py-12">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Form - Full Width -->
+        <div class="mb-12">
+          <NicheLeadForm client:load nicheSlug={nicheSlug} initialZip={zip} />
+        </div>
+
+        <!-- Trust Elements - Below Form -->
+        <div class="grid md:grid-cols-3 gap-6 mb-12">
+            <!-- Benefits -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h3 class="font-semibold text-gray-900 mb-4">Why Get Quotes Through Us?</h3>
+              <div class="space-y-4">
+                {benefits.map((benefit) => (
+                  <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={`background-color: ${niche.color}20;`}>
+                      <svg class="w-4 h-4" style={`color: ${niche.color};`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="font-medium text-gray-900 text-sm">{benefit.title}</div>
+                      <div class="text-sm text-gray-500">{benefit.description}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <!-- Trust Box -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <div class="flex items-center space-x-1 text-yellow-400 mb-3">
+                {[1, 2, 3, 4, 5].map(() => (
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p class="text-gray-700 text-sm italic mb-3">
+                "Got 3 quotes within 24 hours. The contractors were all professional and the prices were competitive. Highly recommend!"
+              </p>
+              <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium" style={`background-color: ${niche.color};`}>
+                  S
+                </div>
+                <div class="text-sm">
+                  <div class="font-medium text-gray-900">Sarah M.</div>
+                  <div class="text-gray-500">Verified Customer</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+              <h3 class="font-semibold text-gray-900 mb-4">{niche.name} Stats</h3>
+              <div class="space-y-3 text-sm">
+                <div class="flex justify-between">
+                  <span class="text-gray-500">Avg. Response Time</span>
+                  <span class="font-medium text-gray-900">Under 4 hours</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-500">Contractors Available</span>
+                  <span class="font-medium text-gray-900">500+</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-500">Average Rating</span>
+                  <span class="font-medium text-gray-900">4.8/5</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-500">Quotes Delivered</span>
+                  <span class="font-medium text-gray-900">50,000+</span>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <!-- Other Services -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 class="font-semibold text-gray-900 mb-4">Other Services</h3>
+          <div class="flex flex-wrap gap-3">
+            {niches.filter(n => n.slug !== nicheSlug).slice(0, 6).map((other) => (
+              <a
+                href={`/get-quotes/${other.slug}/`}
+                class="inline-flex items-center px-4 py-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors text-sm text-gray-700"
+              >
+                {other.name}
+                <svg class="w-4 h-4 ml-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

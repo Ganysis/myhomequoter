@@ -6,9 +6,37 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "blog:generate": "tsx scripts/auto-generate-blog.ts",
+    "blog:workflow": "tsx scripts/daily-blog-workflow.ts",
+    "blog:analyze": "tsx scripts/daily-blog-workflow.ts --analyze",
+    "blog:5": "tsx scripts/daily-blog-workflow.ts --count 5",
+    "blog:3": "tsx scripts/daily-blog-workflow.ts --count 3",
+    "blog:1": "tsx scripts/daily-blog-workflow.ts --count 1 --no-deploy",
+    "blog:solar": "tsx scripts/daily-blog-workflow.ts --category solar",
+    "blog:roofing": "tsx scripts/daily-blog-workflow.ts --category roofing",
+    "blog:hvac": "tsx scripts/daily-blog-workflow.ts --category hvac",
+    "blog:pillar": "tsx scripts/daily-blog-workflow.ts --silo pillar",
+    "blog:deploy": "npx wrangler pages deploy dist --project-name=myhomequoter",
+    "blog:full": "tsx scripts/daily-blog-workflow.ts --count 5"
   },
   "dependencies": {
-    "astro": "^5.16.3"
+    "@astrojs/react": "^4.4.2",
+    "@stripe/stripe-js": "^8.5.3",
+    "@supabase/supabase-js": "^2.86.0",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tailwindcss/vite": "^4.1.17",
+    "@types/react": "^19.2.7",
+    "@types/react-dom": "^19.2.3",
+    "astro": "^5.16.3",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.555.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.17"
+  },
+  "devDependencies": {
+    "@anthropic-ai/sdk": "^0.71.0",
+    "tsx": "^4.21.0"
   }
 }
