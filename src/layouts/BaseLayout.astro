@@ -19,6 +19,9 @@ const {
   noindex = false
 } = Astro.props;
 
+// Google Analytics GA4 - Replace with your measurement ID
+const GA_MEASUREMENT_ID = import.meta.env.PUBLIC_GA_MEASUREMENT_ID || 'G-XXXXXXXXXX';
+
 const siteName = 'MyHomeQuoter';
 const siteUrl = 'https://myhomequoter.com';
 const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
@@ -65,6 +68,22 @@ const absoluteOgImage = ogImage.startsWith('http')
     <link rel="preconnect" href="https://images.unsplash.com" />
 
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Google Analytics GA4 -->
+    {GA_MEASUREMENT_ID !== 'G-XXXXXXXXXX' && (
+      <>
+        <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}></script>
+        <script define:vars={{ GA_MEASUREMENT_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', GA_MEASUREMENT_ID);
+        </script>
+      </>
+    )}
+
+    <!-- Google Search Console verification -->
+    <meta name="google-site-verification" content={import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION || ''} />
   </head>
   <body class="min-h-screen flex flex-col bg-white text-gray-900">
     <Header />

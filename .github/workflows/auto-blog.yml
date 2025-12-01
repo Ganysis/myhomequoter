@@ -162,6 +162,19 @@ jobs:
             echo "⚠️ Cloudflare credentials not configured, skipping deploy"
           fi
 
+      - name: Ping Search Engines
+        if: steps.changes.outputs.has_changes == 'true'
+        run: |
+          echo "🔔 Notifying search engines..."
+
+          # Ping Google sitemap
+          curl -s "https://www.google.com/ping?sitemap=https://myhomequoter.com/sitemap-index.xml" > /dev/null && echo "✅ Google pinged"
+
+          # Ping Bing sitemap
+          curl -s "https://www.bing.com/ping?sitemap=https://myhomequoter.com/sitemap-index.xml" > /dev/null && echo "✅ Bing pinged"
+
+          echo "✅ Search engine notifications complete"
+
       - name: Summary
         if: always()
         run: |
